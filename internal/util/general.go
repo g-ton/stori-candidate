@@ -15,7 +15,7 @@ type TransactionResult struct {
 	Data   map[string]float64
 }
 
-func GetSummaryInfo(transactions []db.Transaction) TransactionResult {
+func GetSummaryInfo(transactions []db.TransactionAlt) TransactionResult {
 	// Get the info from file or db and get the summary information
 	if len(transactions) == 0 {
 		return TransactionResult{}
@@ -100,7 +100,7 @@ func GetSummaryInfo(transactions []db.Transaction) TransactionResult {
 	}
 }
 
-func ProcessFile() ([]db.Transaction, error) {
+func ProcessFile() ([]db.TransactionAlt, error) {
 	contentFile, err := os.ReadFile("./files/txns.csv")
 	if err != nil {
 		fmt.Println(err)
@@ -114,14 +114,14 @@ func ProcessFile() ([]db.Transaction, error) {
 		return nil, err
 	}
 
-	transactions := []db.Transaction{}
+	transactions := []db.TransactionAlt{}
 	for _, row := range records {
 		// Converting string from Transaction column into float64
 		transValue, err := strconv.ParseFloat(row[2], 64)
 		if err != nil {
 			continue
 		}
-		transactions = append(transactions, db.Transaction{
+		transactions = append(transactions, db.TransactionAlt{
 			ID:          row[0],
 			Date:        row[1],
 			Transaction: transValue,
