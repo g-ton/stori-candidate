@@ -1,13 +1,16 @@
 package helper
 
 import (
+	"bytes"
 	"encoding/csv"
 	"fmt"
+	"html/template"
 	"os"
 	"strconv"
 	"strings"
 
 	db "github.com/g-ton/stori-candidate/db/sqlc"
+	"github.com/g-ton/stori-candidate/util"
 )
 
 type TransactionResult struct {
@@ -37,7 +40,7 @@ func GetSummaryInfo(transactions []db.Transaction) TransactionResult {
 			continue
 		}
 
-		date := strings.Trim(trans.Date, "/")
+		date := strings.Split(trans.Date, "/")
 		month := date[0]
 
 		switch string(month) {
@@ -139,4 +142,46 @@ func ProcessFile(filePath string) ([]db.Transaction, error) {
 	}
 
 	return transactions, nil
+}
+
+func ProcessTemplateEmailForTransaction(tr TransactionResult, mails []string) error {
+	// Parsing the HTML template with the content for the email
+	t, err := template.ParseFiles("files/stori-template.html")
+	if err != nil {
+		fmt.Println("error parsing the HTML template", err)
+		return err
+	}
+
+	var body bytes.Buffer
+
+	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	body.Write([]byte(fmt.Sprintf("Subject: Stori Challenge by Damián \n%s\n\n", mimeHeaders)))
+
+	monthsSlice := []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+	transactionsPerMonth := []string{}
+	for _, month := range monthsSlice {
+		if v, ok := tr.Months[month]; ok {
+			transactionsPerMonth = append(transactionsPerMonth, fmt.Sprintf("Number of transactions in %v: %v\n", month, v))
+		}
+	}
+
+	t.Execute(&body, struct {
+		TotalBalance     float64
+		AvgCredit        float64
+		AvgDebit         float64
+		NumTransPerMonth []string
+	}{
+		TotalBalance:     tr.Data["totalBalance"],
+		AvgCredit:        tr.Data["avgCredit"],
+		AvgDebit:         tr.Data["avgDebit"],
+		NumTransPerMonth: transactionsPerMonth,
+	})
+
+	err = util.SendMail(mails, body.Bytes())
+	if err != nil {
+		fmt.Println("error sending email", err)
+		return err
+	}
+
+	return nil
 }

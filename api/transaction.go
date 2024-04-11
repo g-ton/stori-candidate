@@ -2,8 +2,8 @@ package api
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/g-ton/stori-candidate/api/helper"
 	db "github.com/g-ton/stori-candidate/db/sqlc"
@@ -113,12 +113,13 @@ func (server *Server) validAccount(ctx *gin.Context, accountID int64) bool {
 }
 
 type listTransactionsByAccountRequest struct {
-	AccountID int64 `uri:"account_id" binding:"required,min=1"`
+	AccountID int64  `json:"account_id" binding:"required,min=1"`
+	Mails     string `json:"mails" binding:"required"`
 }
 
 func (server *Server) GetSummaryInfoByDB(ctx *gin.Context) {
 	var req listTransactionsByAccountRequest
-	if err := ctx.ShouldBindUri(&req); err != nil {
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
@@ -131,15 +132,13 @@ func (server *Server) GetSummaryInfoByDB(ctx *gin.Context) {
 
 	r := helper.GetSummaryInfo(transactions)
 
-	fmt.Println("totalBalance: ", r.Data["totalBalance"])
-	fmt.Println("avgCredit: ", r.Data["avgCredit"])
-	fmt.Println("avgDebit: ", r.Data["avgDebit"])
-
-	monthsSlice := []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
-	for _, month := range monthsSlice {
-		if v, ok := r.Months[month]; ok {
-			fmt.Printf("Number of transactions in %v: %v\n", month, v)
-		}
+	// Receiver email addresses.
+	// The list of mails is split by a comma to separate one mail from other
+	mailsTo := strings.Split(req.Mails, ",")
+	err = helper.ProcessTemplateEmailForTransaction(r, mailsTo)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
 
 	ctx.JSON(http.StatusOK, transactions)
@@ -147,6 +146,7 @@ func (server *Server) GetSummaryInfoByDB(ctx *gin.Context) {
 
 type listTransactionsByFileRequest struct {
 	FilePath string `json:"file_path" binding:"required"`
+	Mails    string `json:"mails" binding:"required"`
 }
 
 func (server *Server) GetSummaryInfoByFile(ctx *gin.Context) {
@@ -164,15 +164,13 @@ func (server *Server) GetSummaryInfoByFile(ctx *gin.Context) {
 
 	r := helper.GetSummaryInfo(transactions)
 
-	fmt.Println("totalBalance: ", r.Data["totalBalance"])
-	fmt.Println("avgCredit: ", r.Data["avgCredit"])
-	fmt.Println("avgDebit: ", r.Data["avgDebit"])
-
-	monthsSlice := []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
-	for _, month := range monthsSlice {
-		if v, ok := r.Months[month]; ok {
-			fmt.Printf("Number of transactions in %v: %v\n", month, v)
-		}
+	// Receiver email addresses.
+	// The list of mails is split by a comma to separate one mail from other
+	mailsTo := strings.Split(req.Mails, ",")
+	err = helper.ProcessTemplateEmailForTransaction(r, mailsTo)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
 
 	ctx.JSON(http.StatusOK, transactions)

@@ -37,7 +37,7 @@ func main() {
 	server.Router.POST("/transactions", server.CreateTransaction)
 	server.Router.GET("/transactions/:id", server.GetTransaction)
 	server.Router.GET("/transactions", server.ListTransactions)
-	server.Router.POST("/sendSummaryInfoByDB/:account_id", server.GetSummaryInfoByDB)
+	server.Router.POST("/sendSummaryInfoByDB", server.GetSummaryInfoByDB)
 	server.Router.POST("/sendSummaryInfoByFile", server.GetSummaryInfoByFile)
 
 	err = server.Start(config.ServerAddress)
@@ -45,20 +45,3 @@ func main() {
 		log.Fatal("cannot create server:", err)
 	}
 }
-
-// func main_() {
-// 	transactions, _ := util.ProcessFile()
-// 	r := util.GetSummaryInfo(transactions)
-
-// 	fmt.Println("totalBalance: ", r.Data["totalBalance"])
-// 	fmt.Println("avgCredit: ", r.Data["avgCredit"])
-// 	fmt.Println("avgDebit: ", r.Data["avgDebit"])
-
-// 	monthsSlice := []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
-// 	for _, month := range monthsSlice {
-// 		if v, ok := r.Months[month]; ok {
-// 			fmt.Printf("Number of transactions in %v: %v\n", month, v)
-// 		}
-// 	}
-
-// }
