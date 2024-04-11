@@ -93,3 +93,35 @@ func (q *Queries) ListTransactions(ctx context.Context, arg ListTransactionsPara
 	}
 	return items, nil
 }
+
+const listTransactionsByAccount = `-- name: ListTransactionsByAccount :many
+SELECT id, account_id, date, transaction FROM transactions WHERE account_id = $1
+`
+
+func (q *Queries) ListTransactionsByAccount(ctx context.Context, accountID int64) ([]Transaction, error) {
+	rows, err := q.db.QueryContext(ctx, listTransactionsByAccount, accountID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Transaction{}
+	for rows.Next() {
+		var i Transaction
+		if err := rows.Scan(
+			&i.ID,
+			&i.AccountID,
+			&i.Date,
+			&i.Transaction,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

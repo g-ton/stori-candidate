@@ -1,64 +1,64 @@
 package main
 
 import (
-	"encoding/csv"
-	"fmt"
+	"database/sql"
 	"log"
-	"strings"
 
-	"github.com/g-ton/stori-candidate/internal/util"
+	"github.com/g-ton/stori-candidate/api"
+	db "github.com/g-ton/stori-candidate/db/sqlc"
+	"github.com/g-ton/stori-candidate/util"
+	"github.com/gin-contrib/cors"
+	_ "github.com/lib/pq"
 )
 
-func main_() {
-	//fmt.Println("Say hello")
-
-	in := `first_name,last_name,username
-	"Rob","Pike","rob"
-	"Ken","Thompson","ken"
-	"Robert","Griesemer","gri"
-	`
-	r := csv.NewReader(strings.NewReader(in))
-
-	records, err := r.ReadAll()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Print(records)
-
-	// _env := helpers.GetEnvDB()
-
-	// // Run database (Initialazing) with env config
-	// // (Database Service)
-	// dbService := database.New(_env)
-	// // (Web Server Service)
-	// webService := websrv.New()
-
-	// // Initialazing the handler to controll the web actions (Passing database and web server services)
-	// wedHandler := webHdl.NewHTTPHandlerGin(dbService, webService)
-	// router := wedHandler.Router
-	// // Enable CORS (only for test purpouses)
-	// // ref: https://github.com/gin-contrib/cors
-	// router.Use(cors.Default())
-
-	// // Routes (actions)
-	// router.POST("/sendInfo", wedHandler.SendSummaryInformation)
-	// wedHandler.Run()
-}
-
 func main() {
-	transactions, _ := util.ProcessFile()
-	r := util.GetSummaryInfo(transactions)
-
-	fmt.Println("totalBalance: ", r.Data["totalBalance"])
-	fmt.Println("avgCredit: ", r.Data["avgCredit"])
-	fmt.Println("avgDebit: ", r.Data["avgDebit"])
-
-	monthsSlice := []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
-	for _, month := range monthsSlice {
-		if v, ok := r.Months[month]; ok {
-			fmt.Printf("Number of transactions in %v: %v\n", month, v)
-		}
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load configuration:", err)
 	}
 
+	conn, err := sql.Open(config.DBDriver, config.DBSource)
+	if err != nil {
+		log.Fatal("cannot connect to db:", err)
+	}
+
+	store := db.NewStore(conn)
+	server := api.NewServer(store)
+
+	// Enable CORS (only for test purpouses)
+	// ref: https://github.com/gin-contrib/cors
+	server.Router.Use(cors.Default())
+
+	// Routes (actions) for account
+	server.Router.POST("/accounts", server.CreateAccount)
+	server.Router.GET("/accounts/:id", server.GetAccount)
+	server.Router.GET("/accounts", server.ListAccounts)
+	// Routes (actions) for transactions
+	server.Router.POST("/transactions", server.CreateTransaction)
+	server.Router.GET("/transactions/:id", server.GetTransaction)
+	server.Router.GET("/transactions", server.ListTransactions)
+	server.Router.POST("/sendSummaryInfoByDB/:account_id", server.GetSummaryInfoByDB)
+	server.Router.POST("/sendSummaryInfoByFile", server.GetSummaryInfoByFile)
+
+	err = server.Start(config.ServerAddress)
+	if err != nil {
+		log.Fatal("cannot create server:", err)
+	}
 }
+
+// func main_() {
+// 	transactions, _ := util.ProcessFile()
+// 	r := util.GetSummaryInfo(transactions)
+
+// 	fmt.Println("totalBalance: ", r.Data["totalBalance"])
+// 	fmt.Println("avgCredit: ", r.Data["avgCredit"])
+// 	fmt.Println("avgDebit: ", r.Data["avgDebit"])
+
+// 	monthsSlice := []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+// 	for _, month := range monthsSlice {
+// 		if v, ok := r.Months[month]; ok {
+// 			fmt.Printf("Number of transactions in %v: %v\n", month, v)
+// 		}
+// 	}
+
+// }

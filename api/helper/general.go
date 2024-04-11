@@ -1,4 +1,4 @@
-package util
+package helper
 
 import (
 	"encoding/csv"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/g-ton/stori-candidate/db"
+	db "github.com/g-ton/stori-candidate/db/sqlc"
 )
 
 type TransactionResult struct {
@@ -15,7 +15,7 @@ type TransactionResult struct {
 	Data   map[string]float64
 }
 
-func GetSummaryInfo(transactions []db.TransactionAlt) TransactionResult {
+func GetSummaryInfo(transactions []db.Transaction) TransactionResult {
 	// Get the info from file or db and get the summary information
 	if len(transactions) == 0 {
 		return TransactionResult{}
@@ -100,8 +100,15 @@ func GetSummaryInfo(transactions []db.TransactionAlt) TransactionResult {
 	}
 }
 
-func ProcessFile() ([]db.TransactionAlt, error) {
-	contentFile, err := os.ReadFile("./files/txns.csv")
+type TransactionByFile struct {
+	ID          string  `json:"id"`
+	Date        string  `json:"date"`
+	Transaction float64 `json:"transaction"`
+}
+
+func ProcessFile(filePath string) ([]db.Transaction, error) {
+	//contentFile, err := os.ReadFile("./files/txns.csv")
+	contentFile, err := os.ReadFile(filePath)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -114,20 +121,22 @@ func ProcessFile() ([]db.TransactionAlt, error) {
 		return nil, err
 	}
 
-	transactions := []db.TransactionAlt{}
+	transactions := []db.Transaction{}
 	for _, row := range records {
 		// Converting string from Transaction column into float64
 		transValue, err := strconv.ParseFloat(row[2], 64)
 		if err != nil {
 			continue
 		}
-		transactions = append(transactions, db.TransactionAlt{
-			ID:          row[0],
+
+		// Converting ID from string to int64
+		id, _ := strconv.ParseInt(row[0], 10, 64)
+		transactions = append(transactions, db.Transaction{
+			ID:          id,
 			Date:        row[1],
 			Transaction: transValue,
 		})
 	}
 
-	fmt.Println(records)
 	return transactions, nil
 }

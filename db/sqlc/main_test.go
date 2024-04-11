@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/g-ton/stori-candidate/internal/util"
+	"github.com/g-ton/stori-candidate/util"
 	_ "github.com/lib/pq"
 )
 

@@ -16,3 +16,6 @@ SELECT * FROM transactions
 ORDER BY id
 LIMIT $1
 OFFSET $2;
+
+-- name: ListTransactionsByAccount :many
+SELECT * FROM transactions WHERE account_id = $1;

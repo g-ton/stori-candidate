@@ -15,6 +15,7 @@ type Querier interface {
 	GetTransaction(ctx context.Context, id int64) (Transaction, error)
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)
 	ListTransactions(ctx context.Context, arg ListTransactionsParams) ([]Transaction, error)
+	ListTransactionsByAccount(ctx context.Context, accountID int64) ([]Transaction, error)
 }
 
 var _ Querier = (*Queries)(nil)
