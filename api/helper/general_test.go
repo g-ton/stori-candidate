@@ -144,7 +144,7 @@ func TestProcessFile(t *testing.T) {
 }
 
 func TestProcessTemplateEmailForTransaction(t *testing.T) {
-	os.Setenv("FOO", "2")
+	os.Setenv("EMAIL_TEMPLATE_LEVEL", "2")
 	tr := TransactionResult{
 		Months: map[string]int{
 			"January":  2,

@@ -335,7 +335,7 @@ func TestListTransactionsAPI(t *testing.T) {
 }
 
 func TestGetSummaryInfoByFile(t *testing.T) {
-	os.Setenv("FOO", "1")
+	os.Setenv("EMAIL_TEMPLATE_LEVEL", "1")
 	correctPathCsvFile := "../files/txns.csv"
 	incorrectPathCsvFile := "../files/txns.txt"
 
@@ -446,7 +446,7 @@ func TestGetSummaryInfoByFile(t *testing.T) {
 }
 
 func TestGetSummaryInfoByDB(t *testing.T) {
-	os.Setenv("FOO", "1")
+	os.Setenv("EMAIL_TEMPLATE_LEVEL", "1")
 	account := randomAccount()
 	transaction := randomTransaction(account.ID)
 	transactions := []db.Transaction{transaction}

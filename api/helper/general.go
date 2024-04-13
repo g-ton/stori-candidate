@@ -146,12 +146,10 @@ func ProcessFile(filePath string) ([]db.Transaction, error) {
 
 func ProcessTemplateEmailForTransaction(tr TransactionResult, mails []string, mail mail.Mail) error {
 	// Parsing the HTML template with the content for the email
-	//absRootPath := util.GetAbsRootPath()
-	//path := filepath.Join(absRootPath, "files", "stori-template.html")
-	path := ""
-	if os.Getenv("FOO") == "1" {
+	var path string
+	if os.Getenv("EMAIL_TEMPLATE_LEVEL") == "1" {
 		path = "../files/stori-template.html"
-	} else if os.Getenv("FOO") == "2" {
+	} else if os.Getenv("EMAIL_TEMPLATE_LEVEL") == "2" {
 		path = "../../files/stori-template.html"
 	} else {
 		path = "files/stori-template.html"

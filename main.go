@@ -14,7 +14,14 @@ import (
 )
 
 func main() {
-	os.Setenv("FOO", "0")
+	/*
+		EMAIL_TEMPLATE_LEVEL env var helps to indicate the level of folders to consider in order to reach the template file "files/stori-template.html"
+		i.e:
+		If we are at root folder project, the level should be 0 files/stori-template.html
+		If we are at api folder, the level should be 1 ../files/stori-template.html
+		If we are at api/helper folder, the level should be 2 ../../files/stori-template.html
+	*/
+	os.Setenv("EMAIL_TEMPLATE_LEVEL", "0")
 	config, err := util.LoadConfig(".")
 	if err != nil {
 		log.Fatal("cannot load configuration:", err)
