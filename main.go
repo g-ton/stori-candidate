@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	"github.com/g-ton/stori-candidate/api"
 	db "github.com/g-ton/stori-candidate/db/sqlc"
@@ -13,6 +14,7 @@ import (
 )
 
 func main() {
+	os.Setenv("FOO", "0")
 	config, err := util.LoadConfig(".")
 	if err != nil {
 		log.Fatal("cannot load configuration:", err)

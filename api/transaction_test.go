@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strconv"
 	"testing"
 
@@ -334,6 +335,7 @@ func TestListTransactionsAPI(t *testing.T) {
 }
 
 func TestGetSummaryInfoByFile(t *testing.T) {
+	os.Setenv("FOO", "1")
 	correctPathCsvFile := "../files/txns.csv"
 	incorrectPathCsvFile := "../files/txns.txt"
 
@@ -444,6 +446,7 @@ func TestGetSummaryInfoByFile(t *testing.T) {
 }
 
 func TestGetSummaryInfoByDB(t *testing.T) {
+	os.Setenv("FOO", "1")
 	account := randomAccount()
 	transaction := randomTransaction(account.ID)
 	transactions := []db.Transaction{transaction}

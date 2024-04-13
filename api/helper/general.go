@@ -6,13 +6,11 @@ import (
 	"fmt"
 	"html/template"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 
 	db "github.com/g-ton/stori-candidate/db/sqlc"
 	"github.com/g-ton/stori-candidate/mail"
-	"github.com/g-ton/stori-candidate/util"
 )
 
 type TransactionResult struct {
@@ -148,8 +146,16 @@ func ProcessFile(filePath string) ([]db.Transaction, error) {
 
 func ProcessTemplateEmailForTransaction(tr TransactionResult, mails []string, mail mail.Mail) error {
 	// Parsing the HTML template with the content for the email
-	absRootPath := util.GetAbsRootPath()
-	path := filepath.Join(absRootPath, "files", "stori-template.html")
+	//absRootPath := util.GetAbsRootPath()
+	//path := filepath.Join(absRootPath, "files", "stori-template.html")
+	path := ""
+	if os.Getenv("FOO") == "1" {
+		path = "../files/stori-template.html"
+	} else if os.Getenv("FOO") == "2" {
+		path = "../../files/stori-template.html"
+	} else {
+		path = "files/stori-template.html"
+	}
 	t, err := template.ParseFiles(path)
 	if err != nil {
 		fmt.Println("error parsing the HTML template", err)
