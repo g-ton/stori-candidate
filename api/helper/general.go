@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"html/template"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
 	db "github.com/g-ton/stori-candidate/db/sqlc"
+	"github.com/g-ton/stori-candidate/mail"
 	"github.com/g-ton/stori-candidate/util"
 )
 
@@ -144,9 +146,11 @@ func ProcessFile(filePath string) ([]db.Transaction, error) {
 	return transactions, nil
 }
 
-func ProcessTemplateEmailForTransaction(tr TransactionResult, mails []string) error {
+func ProcessTemplateEmailForTransaction(tr TransactionResult, mails []string, mail mail.Mail) error {
 	// Parsing the HTML template with the content for the email
-	t, err := template.ParseFiles("files/stori-template.html")
+	absRootPath := util.GetAbsRootPath()
+	path := filepath.Join(absRootPath, "files", "stori-template.html")
+	t, err := template.ParseFiles(path)
 	if err != nil {
 		fmt.Println("error parsing the HTML template", err)
 		return err
@@ -177,7 +181,7 @@ func ProcessTemplateEmailForTransaction(tr TransactionResult, mails []string) er
 		NumTransPerMonth: transactionsPerMonth,
 	})
 
-	err = util.SendMail(mails, body.Bytes())
+	err = mail.SendMail(mails, body.Bytes())
 	if err != nil {
 		fmt.Println("error sending email", err)
 		return err

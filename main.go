@@ -6,6 +6,7 @@ import (
 
 	"github.com/g-ton/stori-candidate/api"
 	db "github.com/g-ton/stori-candidate/db/sqlc"
+	"github.com/g-ton/stori-candidate/mail"
 	"github.com/g-ton/stori-candidate/util"
 	"github.com/gin-contrib/cors"
 	_ "github.com/lib/pq"
@@ -23,7 +24,8 @@ func main() {
 	}
 
 	store := db.NewStore(conn)
-	server := api.NewServer(store)
+	mail := mail.NewMail(config)
+	server := api.NewServer(store, mail)
 
 	// Enable CORS (only for test purpouses)
 	// ref: https://github.com/gin-contrib/cors

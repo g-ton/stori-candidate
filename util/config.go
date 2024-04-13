@@ -12,6 +12,11 @@ type Config struct {
 	ServerAddress       string        `mapstructure:"SERVER_ADDRESS"`
 	TokenSymmetricKey   string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	AccessTokenDuration time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
+
+	EmailFrom     string `mapstructure:"EMAIL_FROM"`
+	EmailPassword string `mapstructure:"EMAIL_PASSWORD"`
+	EmailSmtpHost string `mapstructure:"EMAIL_SMTPHOST"`
+	EmailSmtpPort string `mapstructure:"EMAIL_SMTPPORT"`
 }
 
 // LoadConfig reads configuration from file or environment variables.

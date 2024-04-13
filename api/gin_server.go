@@ -2,6 +2,7 @@ package api
 
 import (
 	db "github.com/g-ton/stori-candidate/db/sqlc"
+	"github.com/g-ton/stori-candidate/mail"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,13 +10,15 @@ import (
 type Server struct {
 	Store  db.Store
 	Router *gin.Engine
+	Mail   mail.Mail
 }
 
 // NewServer creates a new HTTP server and set up routing.
-func NewServer(store db.Store) *Server {
+func NewServer(store db.Store, mail mail.Mail) *Server {
 	return &Server{
 		Store:  store,
 		Router: gin.New(),
+		Mail:   mail,
 	}
 }
 

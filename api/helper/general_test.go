@@ -1,11 +1,14 @@
 package helper
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 
 	"github.com/bxcodec/faker/v4"
 	db "github.com/g-ton/stori-candidate/db/sqlc"
+	mockmail "github.com/g-ton/stori-candidate/mail/mock"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 )
 
@@ -135,6 +138,76 @@ func TestProcessFile(t *testing.T) {
 
 			// check response
 			tc.checkResponse(t, trans, err)
+		})
+	}
+}
+
+func TestProcessTemplateEmailForTransaction(t *testing.T) {
+	tr := TransactionResult{
+		Months: map[string]int{
+			"January":  2,
+			"February": 2,
+		},
+		Data: map[string]float64{
+			"totalBalance": 10.0,
+			"avgCredit":    10.0,
+			"avgDebit":     -10.0,
+		},
+	}
+
+	testCases := []struct {
+		name          string
+		input         TransactionResult
+		buildStubs    func(mail *mockmail.MockMail)
+		checkResponse func(t *testing.T, err error)
+	}{
+		{
+			name:  "OK",
+			input: tr,
+			buildStubs: func(mail *mockmail.MockMail) {
+				// build stubs
+				mail.EXPECT().
+					SendMail(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil)
+			},
+			checkResponse: func(t *testing.T, err error) {
+				// check response
+				require.Nil(t, err)
+			},
+		},
+		{
+			name:  "Error Sending Mail",
+			input: tr,
+			buildStubs: func(mail *mockmail.MockMail) {
+				// build stubs
+				mail.EXPECT().
+					SendMail(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(fmt.Errorf("html/template: cannot Parse after Execute"))
+			},
+			checkResponse: func(t *testing.T, err error) {
+				// check response
+				require.NotNil(t, err)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			// Very important
+			defer ctrl.Finish()
+
+			mail := mockmail.NewMockMail(ctrl)
+			// build stubs
+			tc.buildStubs(mail)
+
+			err := ProcessTemplateEmailForTransaction(tc.input, []string{"jdamianjm@gmail.com"}, mail)
+
+			// check response
+			tc.checkResponse(t, err)
 		})
 	}
 }

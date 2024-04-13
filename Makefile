@@ -34,4 +34,7 @@ server:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/g-ton/stori-candidate/db/sqlc Store
 
-.PHONY: postgres createdb dropdb migrateup migrateup_last_one migratedown migratedown_last_one sqlc server mock
+mock_mail:
+	mockgen -package mockmail -destination mail/mock/mail.go github.com/g-ton/stori-candidate/mail Mail
+
+.PHONY: postgres createdb dropdb migrateup migrateup_last_one migratedown migratedown_last_one sqlc server mock mock_mail

@@ -135,7 +135,7 @@ func (server *Server) GetSummaryInfoByDB(ctx *gin.Context) {
 	// Receiver email addresses.
 	// The list of mails is split by a comma to separate one mail from other
 	mailsTo := strings.Split(req.Mails, ",")
-	err = helper.ProcessTemplateEmailForTransaction(r, mailsTo)
+	err = helper.ProcessTemplateEmailForTransaction(r, mailsTo, server.Mail)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
@@ -167,7 +167,7 @@ func (server *Server) GetSummaryInfoByFile(ctx *gin.Context) {
 	// Receiver email addresses.
 	// The list of mails is split by a comma to separate one mail from other
 	mailsTo := strings.Split(req.Mails, ",")
-	err = helper.ProcessTemplateEmailForTransaction(r, mailsTo)
+	err = helper.ProcessTemplateEmailForTransaction(r, mailsTo, server.Mail)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
