@@ -11,17 +11,6 @@ migratedown:
 postgres:
 	docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=kuna1234 -d postgres:12-alpine
 
-dropdb:
-	docker exec -it postgres12 dropdb simple_bank
-
-
-migrateup_last_one:
-	migrate -path db/migration -database "postgresql://root:kuna1234@localhost:5432/simple_bank?sslmode=disable" -verbose up 1
-
-
-migratedown_last_one:
-	migrate -path db/migration -database "postgresql://root:kuna1234@localhost:5432/simple_bank?sslmode=disable" -verbose down 1
-
 sqlc:
 	sqlc generate
 
@@ -37,4 +26,4 @@ mock:
 mock_mail:
 	mockgen -package mockmail -destination mail/mock/mail.go github.com/g-ton/stori-candidate/mail Mail
 
-.PHONY: postgres createdb dropdb migrateup migrateup_last_one migratedown migratedown_last_one sqlc server mock mock_mail
+.PHONY: postgres createdb migrateup  migratedown sqlc server mock mock_mail
