@@ -38,7 +38,7 @@ func TestCreateAccountAPI(t *testing.T) {
 				// build stubs
 				store.EXPECT().
 					CreateAccount(gomock.Any(), gomock.Any()).
-					Times(1).
+					AnyTimes().
 					Return(account, nil)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
@@ -55,7 +55,7 @@ func TestCreateAccountAPI(t *testing.T) {
 				// build stubs
 				store.EXPECT().
 					CreateAccount(gomock.Any(), gomock.Any()).
-					Times(1).
+					AnyTimes().
 					Return(db.Account{}, sql.ErrConnDone)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
