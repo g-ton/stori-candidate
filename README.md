@@ -289,6 +289,13 @@ An email sent to the customer
 
 ![image](https://github.com/g-ton/stori-candidate/assets/13384146/03caca34-1127-474d-8262-d1eed1277fcc)
 
+------------
+
+Thanks a lot for your time reviewing this project!, any doubt feel free to reach out to me:
+
+email: jdamianjm@gmail.com
+
+phone: 22 23 16 81 67
 
 ![image](https://github.com/g-ton/stori-candidate/assets/13384146/13af9f5d-069c-4073-b585-2ddc6fc0a226)
 
