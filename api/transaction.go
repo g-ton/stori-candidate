@@ -11,9 +11,9 @@ import (
 )
 
 type createTransactionRequest struct {
-	AccountID   int64   `json:"account_id" binding:"required,min=1"`
-	Date        string  `json:"date" binding:"required"`
-	Transaction float64 `json:"transaction" binding:"required"`
+	AccountID   int64   `json:"account_id" binding:"required,min=1" example:"1"`
+	Date        string  `json:"date" binding:"required" example:"6/15"`
+	Transaction float64 `json:"transaction" binding:"required" example:"-20.3"`
 }
 
 // CreateTags		godoc

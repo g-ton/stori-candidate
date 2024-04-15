@@ -302,10 +302,12 @@ const docTemplate = `{
             "properties": {
                 "card_number": {
                     "description": "We wait for a card number with a len of 16 digits",
-                    "type": "string"
+                    "type": "string",
+                    "example": "2011232967685539"
                 },
                 "owner": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Paty Jiménez"
                 }
             }
         },
@@ -319,13 +321,16 @@ const docTemplate = `{
             "properties": {
                 "account_id": {
                     "type": "integer",
-                    "minimum": 1
+                    "minimum": 1,
+                    "example": 1
                 },
                 "date": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "6/15"
                 },
                 "transaction": {
-                    "type": "number"
+                    "type": "number",
+                    "example": -20.3
                 }
             }
         },

@@ -9,9 +9,9 @@ import (
 )
 
 type createAccountRequest struct {
-	Owner string `json:"owner" binding:"required"`
+	Owner string `json:"owner" binding:"required" example:"Paty Jiménez"`
 	// We wait for a card number with a len of 16 digits
-	CardNumber string `json:"card_number" binding:"required,len=16"`
+	CardNumber string `json:"card_number" binding:"required,len=16" example:"2011232967685539"`
 }
 
 // CreateTags		godoc

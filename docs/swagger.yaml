@@ -3,8 +3,10 @@ definitions:
     properties:
       card_number:
         description: We wait for a card number with a len of 16 digits
+        example: "2011232967685539"
         type: string
       owner:
+        example: Paty Jiménez
         type: string
     required:
     - card_number
@@ -13,11 +15,14 @@ definitions:
   api.createTransactionRequest:
     properties:
       account_id:
+        example: 1
         minimum: 1
         type: integer
       date:
+        example: 6/15
         type: string
       transaction:
+        example: -20.3
         type: number
     required:
     - account_id

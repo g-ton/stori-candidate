@@ -36,7 +36,7 @@ It's used a **postgres** db in order to store the account and transaction entiti
 
 ![image](https://github.com/g-ton/stori-candidate/assets/13384146/26c3d637-dcdd-4f0a-a995-40c03f8f3ad1)
 
-An account is necessary to be avialbe to create a transaction, that means We need to create an account before and then with the ID of that account we can create one or more transactions
+An account is necessary to be availabe to create a transaction, that means We need to create an account before and then with the ID of that account we can create one or more transactions
 
 Fields for Account:
 
@@ -72,7 +72,7 @@ This is the technology stack used:
 
 # Consuming API endpoints
 
-Here [the Postman collection](https://file.io/F46OszVhNfCH) to consume the endpoints locally through localhost:8282 
+Here [the Postman collection](https://easyupload.io/lhmrvm) to consume the endpoints locally through localhost:8282 
 
 ### sendSummaryInfoByFile
 The easiest endpoint to consume is `sendSummaryInfoByFile` because it's not necessary to create previously an account nor a transaction, this endpoint can read two possible files **./files/txns.csv**, **./files/txns2.csv**
@@ -230,8 +230,6 @@ An email sent to the customer
 
 # Consuming API endpoints through AWS
 
-Here the Postman collection to consume the endpoints through lambda functions on AWS
-
 Before showing the consumption of the endpoints I would like to explain a little bit the AWS structure used for this project:
 
 The common use case using the infrastructure of AWS in this project:
@@ -248,7 +246,7 @@ Our lambda functions like this:
 
 Now it's time to explain the endpoints!
 
-Here [the Postman collection](https://file.io/F46OszVhNfCH) to consume the endpoints on AWS **https://vj33odq2ta.execute-api.us-east-2.amazonaws.com/dev**
+Here [the Postman collection](https://easyupload.io/lhmrvm) to consume the endpoints on AWS **https://vj33odq2ta.execute-api.us-east-2.amazonaws.com/dev**
 
 Let's make this section short because We have explained before the all available endpoints in the system, here We are going to explain only sendSummaryInfoByDB (Summary made taking the transactions in DB) and sendSummaryInfoByFile (Summary made taking the transactions from the CSV file):
 
