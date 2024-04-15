@@ -68,10 +68,11 @@ This is the technology stack used:
  - S3
  - API Gateway
  - Aurora RDS
+ - Postgres
 
 # Consuming API endpoints
 
-Here the Postman collection to consume the endpoints locally through localhost:8282 
+Here [the Postman collection](https://file.io/F46OszVhNfCH) to consume the endpoints locally through localhost:8282 
 
 ### sendSummaryInfoByFile
 The easiest endpoint to consume is `sendSummaryInfoByFile` because it's not necessary to create previously an account nor a transaction, this endpoint can read two possible files **./files/txns.csv**, **./files/txns2.csv**
@@ -94,6 +95,66 @@ The easiest endpoint to consume is `sendSummaryInfoByFile` because it's not nece
 An email sent to the customer
 
 ![image](https://github.com/g-ton/stori-candidate/assets/13384146/1591cb61-ba9d-4776-aec8-1d6d5c390940)
+
+**Reading the second file**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/cd7fff1c-fcb3-42f5-9fc3-cb105aeb87e6)
+
+
+**Input:**
+
+./files/txns2.csv
+
+```
+{
+        "id": 0,
+        "account_id": 0,
+        "date": "1/15",
+        "transaction": 70.5
+    },
+    {
+        "id": 1,
+        "account_id": 0,
+        "date": "7/28",
+        "transaction": -10.3
+    },
+    {
+        "id": 2,
+        "account_id": 0,
+        "date": "2/02",
+        "transaction": -20.46
+    },
+    {
+        "id": 3,
+        "account_id": 0,
+        "date": "8/13",
+        "transaction": 10
+    },
+    {
+        "id": 4,
+        "account_id": 0,
+        "date": "1/13",
+        "transaction": -10
+    },
+    {
+        "id": 5,
+        "account_id": 0,
+        "date": "7/20",
+        "transaction": 15.9
+    }
+```
+
+**Expected outcome:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/8d114dbf-5dfd-48e5-b43b-06ab1935a5e7)
+
+
+**Got outcome:**
+
+An email sent to the customer
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/27d753d9-c20f-4994-9546-26374e59bd09)
+
 
 ### createAccount
 
@@ -165,6 +226,82 @@ An email sent to the customer
 An email sent to the customer
 
 ![image](https://github.com/g-ton/stori-candidate/assets/13384146/b88230db-8155-4732-917d-a3ddec986e61)
+
+
+# Consuming API endpoints through AWS
+
+Here the Postman collection to consume the endpoints through lambda functions on AWS
+
+Before showing the consumption of the endpoints I would like to explain a little bit the AWS structure used for this project:
+
+The common use case using the infrastructure of AWS in this project:
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/eb529320-3499-486e-8fa6-5f4441177c75)
+
+Our API gateway looks like this:
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/815786d4-889b-4407-b169-9ada0f338c7c)
+
+Our lambda functions like this:
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/1a9dded5-bfc6-4497-84e6-86f5e8b67749)
+
+Now it's time to explain the endpoints!
+
+Here [the Postman collection](https://file.io/F46OszVhNfCH) to consume the endpoints on AWS **https://vj33odq2ta.execute-api.us-east-2.amazonaws.com/dev**
+
+Let's make this section short because We have explained before the all available endpoints in the system, here We are going to explain only sendSummaryInfoByDB (Summary made taking the transactions in DB) and sendSummaryInfoByFile (Summary made taking the transactions from the CSV file):
+
+### sendSummaryInfoByFile
+The easiest endpoint to consume is `sendSummaryInfoByFile` because it's not necessary to create previously an account nor a transaction, this endpoint can read two possible files **./files/txns.csv**, **./files/txns2.csv**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/a745550b-704a-4c79-adb9-f5c4375b1a4b)
+
+
+**Input:**
+
+./files/txns.csv
+
+**Expected outcome:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/758f4622-d463-4ae4-aafc-17c15bbf7593)
+
+**Got outcome:**
+
+An email sent to the customer
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/4592362f-df6d-4016-9499-611a67be1f69)
+
+### sendSummaryInfoByDB
+
+**Input:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/71c121d0-02dc-4fcd-8a8c-6b502ff1a405)
+
+
+**Expected outcome:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/937bdaf0-fdf0-4316-9343-78d6f5b6b28d)
+
+
+
+**Got outcome:**
+
+An email sent to the customer
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/03caca34-1127-474d-8262-d1eed1277fcc)
+
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/13af9f5d-069c-4073-b585-2ddc6fc0a226)
+
+
+
+
+
+
+
+
+
 
 
 
