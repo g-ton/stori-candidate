@@ -1,0 +1,391 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/accounts": {
+            "get": {
+                "description": "A list of accounts and their info is returned by pagination.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "ListAccounts gets a list of accounts",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "The id of the page where to start",
+                        "name": "page_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "maximum": 10,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "The number of registers to show per page",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account list structure",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/db.Account"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "An account for a customer is created including the card number.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "CreateAccount creates an stori account",
+                "parameters": [
+                    {
+                        "description": "Account request",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.createAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account structure",
+                        "schema": {
+                            "$ref": "#/definitions/db.Account"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/{id}": {
+            "get": {
+                "description": "The info of an account is returned.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "GetAccount gets an account by ID",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "The id of the account to be searched",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account structure",
+                        "schema": {
+                            "$ref": "#/definitions/db.Account"
+                        }
+                    }
+                }
+            }
+        },
+        "/sendSummaryInfoByDB": {
+            "post": {
+                "description": "A email is sent to the customer with the summary information, getting the data from DB.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Summary"
+                ],
+                "summary": "GetSummaryInfoByDB sends the summary information using BD",
+                "parameters": [
+                    {
+                        "description": "Request object to send the summary info",
+                        "name": "summary",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.listTransactionsByAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction list structure",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/db.Transaction"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sendSummaryInfoByFile": {
+            "post": {
+                "description": "A email is sent to the customer with the summary information, getting the data from a CSV file.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Summary"
+                ],
+                "summary": "GetSummaryInfoByFile sends the summary information using a File",
+                "parameters": [
+                    {
+                        "description": "Request object to send the summary info",
+                        "name": "summary",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.listTransactionsByFileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction list structure",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/db.Transaction"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "get": {
+                "description": "A list of transactions and their info is returned by pagination.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "ListTransactions gets a list of transactions",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "The id of the page where to start",
+                        "name": "page_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "maximum": 10,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "The number of registers to show per page",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction list structure",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/db.Transaction"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "A transaction is created passing a valid account, It's necessary to have before an account in order to proceed with the creation of the transaction.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "CreateTransaction creates a transaction",
+                "parameters": [
+                    {
+                        "description": "Transaction request",
+                        "name": "transaction",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.createTransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction structure",
+                        "schema": {
+                            "$ref": "#/definitions/db.Transaction"
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions/{id}": {
+            "get": {
+                "description": "The info of a transaction is returned.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "GetTransaction gets a transaction by ID",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "The id of the transaction to be searched",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction structure",
+                        "schema": {
+                            "$ref": "#/definitions/db.Transaction"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.createAccountRequest": {
+            "type": "object",
+            "required": [
+                "card_number",
+                "owner"
+            ],
+            "properties": {
+                "card_number": {
+                    "description": "We wait for a card number with a len of 16 digits",
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.createTransactionRequest": {
+            "type": "object",
+            "required": [
+                "account_id",
+                "date",
+                "transaction"
+            ],
+            "properties": {
+                "account_id": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "date": {
+                    "type": "string"
+                },
+                "transaction": {
+                    "type": "number"
+                }
+            }
+        },
+        "api.listTransactionsByAccountRequest": {
+            "type": "object",
+            "required": [
+                "account_id",
+                "mails"
+            ],
+            "properties": {
+                "account_id": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "mails": {
+                    "type": "string",
+                    "example": "a@mail.com,b@mail.com"
+                }
+            }
+        },
+        "api.listTransactionsByFileRequest": {
+            "type": "object",
+            "required": [
+                "file_path",
+                "mails"
+            ],
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "example": "./files/txns.csv"
+                },
+                "mails": {
+                    "type": "string",
+                    "example": "a@mail.com,b@mail.com"
+                }
+            }
+        },
+        "db.Account": {
+            "type": "object",
+            "properties": {
+                "card_number": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "owner": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.Transaction": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "integer"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "transaction": {
+                    "description": "can be negative ( - Debit) or possitive ( + Credit)",
+                    "type": "number"
+                }
+            }
+        }
+    }
+}

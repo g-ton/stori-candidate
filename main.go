@@ -7,10 +7,13 @@ import (
 
 	"github.com/g-ton/stori-candidate/api"
 	db "github.com/g-ton/stori-candidate/db/sqlc"
+	_ "github.com/g-ton/stori-candidate/docs"
 	"github.com/g-ton/stori-candidate/mail"
 	"github.com/g-ton/stori-candidate/util"
 	"github.com/gin-contrib/cors"
 	_ "github.com/lib/pq"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -39,6 +42,7 @@ func main() {
 	// Enable CORS (only for test purpouses)
 	// ref: https://github.com/gin-contrib/cors
 	server.Router.Use(cors.Default())
+	server.Router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Routes (actions) for account
 	server.Router.POST("/accounts", server.CreateAccount)

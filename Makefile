@@ -26,4 +26,10 @@ mock:
 mock_mail:
 	mockgen -package mockmail -destination mail/mock/mail.go github.com/g-ton/stori-candidate/mail Mail
 
-.PHONY: postgres createdb migrateup  migratedown sqlc server mock mock_mail
+generate_swag_doc:
+	swag init
+
+on_docker:
+	docker compose up
+
+.PHONY: postgres createdb migrateup  migratedown sqlc server mock mock_mail generate_swag_doc

@@ -1,0 +1,264 @@
+definitions:
+  api.createAccountRequest:
+    properties:
+      card_number:
+        description: We wait for a card number with a len of 16 digits
+        type: string
+      owner:
+        type: string
+    required:
+    - card_number
+    - owner
+    type: object
+  api.createTransactionRequest:
+    properties:
+      account_id:
+        minimum: 1
+        type: integer
+      date:
+        type: string
+      transaction:
+        type: number
+    required:
+    - account_id
+    - date
+    - transaction
+    type: object
+  api.listTransactionsByAccountRequest:
+    properties:
+      account_id:
+        minimum: 1
+        type: integer
+      mails:
+        example: a@mail.com,b@mail.com
+        type: string
+    required:
+    - account_id
+    - mails
+    type: object
+  api.listTransactionsByFileRequest:
+    properties:
+      file_path:
+        example: ./files/txns.csv
+        type: string
+      mails:
+        example: a@mail.com,b@mail.com
+        type: string
+    required:
+    - file_path
+    - mails
+    type: object
+  db.Account:
+    properties:
+      card_number:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      owner:
+        type: string
+    type: object
+  db.Transaction:
+    properties:
+      account_id:
+        type: integer
+      date:
+        type: string
+      id:
+        type: integer
+      transaction:
+        description: can be negative ( - Debit) or possitive ( + Credit)
+        type: number
+    type: object
+info:
+  contact: {}
+paths:
+  /accounts:
+    get:
+      description: A list of accounts and their info is returned by pagination.
+      parameters:
+      - description: The id of the page where to start
+        in: query
+        minimum: 1
+        name: page_id
+        required: true
+        type: integer
+      - description: The number of registers to show per page
+        in: query
+        maximum: 10
+        minimum: 1
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Account list structure
+          schema:
+            items:
+              $ref: '#/definitions/db.Account'
+            type: array
+      summary: ListAccounts gets a list of accounts
+      tags:
+      - Account
+    post:
+      consumes:
+      - application/json
+      description: An account for a customer is created including the card number.
+      parameters:
+      - description: Account request
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/api.createAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Account structure
+          schema:
+            $ref: '#/definitions/db.Account'
+      summary: CreateAccount creates an stori account
+      tags:
+      - Account
+  /accounts/{id}:
+    get:
+      description: The info of an account is returned.
+      parameters:
+      - description: The id of the account to be searched
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Account structure
+          schema:
+            $ref: '#/definitions/db.Account'
+      summary: GetAccount gets an account by ID
+      tags:
+      - Account
+  /sendSummaryInfoByDB:
+    post:
+      description: A email is sent to the customer with the summary information, getting
+        the data from DB.
+      parameters:
+      - description: Request object to send the summary info
+        in: body
+        name: summary
+        required: true
+        schema:
+          $ref: '#/definitions/api.listTransactionsByAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction list structure
+          schema:
+            items:
+              $ref: '#/definitions/db.Transaction'
+            type: array
+      summary: GetSummaryInfoByDB sends the summary information using BD
+      tags:
+      - Summary
+  /sendSummaryInfoByFile:
+    post:
+      description: A email is sent to the customer with the summary information, getting
+        the data from a CSV file.
+      parameters:
+      - description: Request object to send the summary info
+        in: body
+        name: summary
+        required: true
+        schema:
+          $ref: '#/definitions/api.listTransactionsByFileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction list structure
+          schema:
+            items:
+              $ref: '#/definitions/db.Transaction'
+            type: array
+      summary: GetSummaryInfoByFile sends the summary information using a File
+      tags:
+      - Summary
+  /transactions:
+    get:
+      description: A list of transactions and their info is returned by pagination.
+      parameters:
+      - description: The id of the page where to start
+        in: query
+        minimum: 1
+        name: page_id
+        required: true
+        type: integer
+      - description: The number of registers to show per page
+        in: query
+        maximum: 10
+        minimum: 1
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction list structure
+          schema:
+            items:
+              $ref: '#/definitions/db.Transaction'
+            type: array
+      summary: ListTransactions gets a list of transactions
+      tags:
+      - Transaction
+    post:
+      consumes:
+      - application/json
+      description: A transaction is created passing a valid account, It's necessary
+        to have before an account in order to proceed with the creation of the transaction.
+      parameters:
+      - description: Transaction request
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/api.createTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction structure
+          schema:
+            $ref: '#/definitions/db.Transaction'
+      summary: CreateTransaction creates a transaction
+      tags:
+      - Transaction
+  /transactions/{id}:
+    get:
+      description: The info of a transaction is returned.
+      parameters:
+      - description: The id of the transaction to be searched
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction structure
+          schema:
+            $ref: '#/definitions/db.Transaction'
+      summary: GetTransaction gets a transaction by ID
+      tags:
+      - Transaction
+swagger: "2.0"

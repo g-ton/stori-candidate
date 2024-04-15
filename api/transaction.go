@@ -16,7 +16,15 @@ type createTransactionRequest struct {
 	Transaction float64 `json:"transaction" binding:"required"`
 }
 
-// -- CREATE
+// CreateTags		godoc
+// @Summary			CreateTransaction creates a transaction
+// @Description		A transaction is created passing a valid account, It's necessary to have before an account in order to proceed with the creation of the transaction.
+// @Accept			json
+// @Produce			application/json
+// @Param   transaction         body     createTransactionRequest        true  "Transaction request"
+// @Tags			Transaction
+// @Router			/transactions [post]
+// @Success 200	{object} db.Transaction "Transaction structure"
 func (server *Server) CreateTransaction(ctx *gin.Context) {
 	var req createTransactionRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -48,7 +56,14 @@ type getTransactionRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-// -- GET
+// CreateTags		godoc
+// @Summary			GetTransaction gets a transaction by ID
+// @Description		The info of a transaction is returned.
+// @Produce			application/json
+// @Tags			Transaction
+// @Param   id         path     int        true  "The id of the transaction to be searched"          minimum(1)
+// @Router			/transactions/{id} [get]
+// @Success 200	{object} db.Transaction "Transaction structure"
 func (server *Server) GetTransaction(ctx *gin.Context) {
 	var req getTransactionRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
@@ -75,7 +90,15 @@ type listTransactionRequest struct {
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
-// -- LIST
+// CreateTags		godoc
+// @Summary			ListTransactions gets a list of transactions
+// @Description		A list of transactions and their info is returned by pagination.
+// @Produce			application/json
+// @Tags			Transaction
+// @Param   page_id         query     int        true  "The id of the page where to start"          minimum(1)
+// @Param   page_size         query     int        true  "The number of registers to show per page"          minimum(1) maximum(10)
+// @Router			/transactions [get]
+// @Success 200	{object} []db.Transaction "Transaction list structure"
 func (server *Server) ListTransactions(ctx *gin.Context) {
 	var req listTransactionRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
@@ -114,9 +137,17 @@ func (server *Server) validAccount(ctx *gin.Context, accountID int64) bool {
 
 type listTransactionsByAccountRequest struct {
 	AccountID int64  `json:"account_id" binding:"required,min=1"`
-	Mails     string `json:"mails" binding:"required"`
+	Mails     string `json:"mails" binding:"required" example:"a@mail.com,b@mail.com"`
 }
 
+// CreateTags		godoc
+// @Summary			GetSummaryInfoByDB sends the summary information using BD
+// @Description		A email is sent to the customer with the summary information, getting the data from DB.
+// @Produce			application/json
+// @Tags			Summary
+// @Param   summary	body	listTransactionsByAccountRequest	true  "Request object to send the summary info"
+// @Router			/sendSummaryInfoByDB [post]
+// @Success 200	{object} []db.Transaction "Transaction list structure"
 func (server *Server) GetSummaryInfoByDB(ctx *gin.Context) {
 	var req listTransactionsByAccountRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -145,10 +176,18 @@ func (server *Server) GetSummaryInfoByDB(ctx *gin.Context) {
 }
 
 type listTransactionsByFileRequest struct {
-	FilePath string `json:"file_path" binding:"required"`
-	Mails    string `json:"mails" binding:"required"`
+	FilePath string `json:"file_path" binding:"required" example:"./files/txns.csv"`
+	Mails    string `json:"mails" binding:"required" example:"a@mail.com,b@mail.com"`
 }
 
+// CreateTags		godoc
+// @Summary			GetSummaryInfoByFile sends the summary information using a File
+// @Description		A email is sent to the customer with the summary information, getting the data from a CSV file.
+// @Produce			application/json
+// @Tags			Summary
+// @Param   summary	body	listTransactionsByFileRequest	true  "Request object to send the summary info"
+// @Router			/sendSummaryInfoByFile [post]
+// @Success 200	{object} []db.Transaction "Transaction list structure"
 func (server *Server) GetSummaryInfoByFile(ctx *gin.Context) {
 	var req listTransactionsByFileRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
