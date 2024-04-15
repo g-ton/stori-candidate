@@ -65,6 +65,117 @@ This is the technology stack used:
  
  - Docker 20.10.12
  - Lambda functions AWS
+ - S3
+ - API Gateway
+ - Aurora RDS
+
+# Consuming API endpoints
+
+Here the Postman collection to consume the endpoints locally through localhost:8282 
+
+### sendSummaryInfoByFile
+The easiest endpoint to consume is `sendSummaryInfoByFile` because it's not necessary to create previously an account nor a transaction, this endpoint can read two possible files **./files/txns.csv**, **./files/txns2.csv**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/552546e6-bd93-4e0f-868c-350c45395618)
+
+**Input:**
+
+./files/txns.csv
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/208c19af-b4a0-4272-9a8d-8a7d11a9d32c)
+
+
+**Expected outcome:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/758f4622-d463-4ae4-aafc-17c15bbf7593)
+
+**Got outcome:**
+
+An email sent to the customer
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/1591cb61-ba9d-4776-aec8-1d6d5c390940)
+
+### createAccount
+
+**Input:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/f61719a6-82b3-4ef8-8ad3-474302f9e180)
+
+**Outcome:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/79c6585b-0f83-4b11-9720-a11c565043d8)
+
+### getAccount
+
+**Input:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/a9821fbe-ff68-4aa7-b728-8a533a7af6df)
+
+**Outcome:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/2023afb2-815a-4050-913e-8dfecb4537a6)
+
+### createTransaction
+
+**Input:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/c151c769-130c-4657-b190-71dfc5e7ab58)
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/50b898d1-8c90-472f-ba55-d670624db9a6)
+
+
+**Outcome:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/4f6c8181-affe-4294-ac8a-2346d939def5)
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/8bda5977-89ce-49a5-bbd0-5d25f360f716)
+
+
+
+### getTransaction
+
+**Input:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/df639a39-d10f-4e2b-83a5-22265abb75be)
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/6d838394-84db-4f5e-bf37-54ae343576d0)
+
+
+**Outcome:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/9372d475-fd95-4b8f-b7c4-391e18998be8)
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/3ebde881-2ecd-41e4-b5f0-a3f426cf1b84)
+
+
+### sendSummaryInfoByDB
+
+**Input:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/7be3d772-03e1-47f9-a175-fbdb95fad565)
+
+
+**Expected outcome:**
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/5c090cef-e315-4af0-b825-99d9998df601)
+
+
+**Got outcome:**
+
+An email sent to the customer
+
+![image](https://github.com/g-ton/stori-candidate/assets/13384146/b88230db-8155-4732-917d-a3ddec986e61)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
