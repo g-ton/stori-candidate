@@ -24,15 +24,15 @@ type createAccountRequest struct {
 // @Router			/accounts [post]
 // @Success 200	{object} db.Account "Account structure"
 func (server *Server) CreateAccount(ctx *gin.Context) {
-	var req createAccountRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	var request createAccountRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
 	arg := db.CreateAccountParams{
-		Owner:      req.Owner,
-		CardNumber: req.CardNumber,
+		Owner:      request.Owner,
+		CardNumber: request.CardNumber,
 	}
 
 	account, err := server.Store.CreateAccount(ctx, arg)
