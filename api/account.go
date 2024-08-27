@@ -30,9 +30,10 @@ func (server *Server) CreateAccount(ctx *gin.Context) {
 		return
 	}
 
+	request := req
 	arg := db.CreateAccountParams{
-		Owner:      req.Owner,
-		CardNumber: req.CardNumber,
+		Owner:      request.Owner,
+		CardNumber: request.CardNumber,
 	}
 
 	account, err := server.Store.CreateAccount(ctx, arg)
