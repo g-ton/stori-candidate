@@ -30,6 +30,7 @@ func (server *Server) CreateAccount(ctx *gin.Context) {
 		return
 	}
 
+	request := req
 	arg := db.CreateAccountParams{
 		Owner:      request.Owner,
 		CardNumber: request.CardNumber,
